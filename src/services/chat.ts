@@ -15,6 +15,7 @@ interface ChatResponse {
 export async function sendMessage(messages: { role: string; content: string }[]): Promise<string> {
   const res = await fetch(`${BACKEND_BASE_URL}/api/v1/chat/completions`, {
     method: 'POST',
+    mode: 'cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'digital-twin',
