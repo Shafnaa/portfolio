@@ -1,5 +1,5 @@
 // Base URL for the chat API
-const BASE_URL = import.meta.env.BASE_URL || 'http://localhost:8080';
+const BACKEND_BASE_URL = import.meta.env.BACKEND_BASE_URL || 'https://api.saujanashafi.com';
 
 interface ChatMessage {
   role: string;
@@ -13,7 +13,7 @@ interface ChatResponse {
 }
 
 export async function sendMessage(messages: { role: string; content: string }[]): Promise<string> {
-  const res = await fetch(`${BASE_URL}/api/v1/chat/completions`, {
+  const res = await fetch(`${BACKEND_BASE_URL}/api/v1/chat/completions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
