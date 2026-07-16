@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:8080';
+// Base URL for the chat API
+const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 
 interface ChatMessage {
   role: string;

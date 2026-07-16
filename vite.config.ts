@@ -11,13 +11,12 @@ const config = defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+
   plugins: [
     devtools(),
-    // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
-
     TanStackRouterVite({
       target: 'react',
       autoCodeSplitting: true,

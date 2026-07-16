@@ -1,22 +1,33 @@
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from portfolio.agent import build_graph
 
 
-graph = None
+_graph = None
+STATIC_DIR = Path(__file__).resolve().parent.parent.parent.parent / "dist"
+
+
+def get_graph():
+    global _graph
+    if _graph is None:
+        load_dotenv(
+            os.path.join(os.path.dirname(__file__), "..", "..", ".env.local")
+        )
+        _graph = build_graph()
+    return _graph
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global graph
-    load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env.local"))
-    graph = build_graph()
+    get_graph()
     yield
 
 
@@ -58,7 +69,7 @@ class ChatResponse(BaseModel):
 @app.post("/api/v1/chat/completions")
 async def chat(request: ChatRequest):
     question = request.messages[-1].content
-    state = graph.invoke({"question": question})
+    state = get_graph().invoke({"question": question})
     return ChatResponse(
         choices=[
             Choice(
@@ -71,3 +82,7 @@ async def chat(request: ChatRequest):
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+if STATIC_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")

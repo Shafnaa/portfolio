@@ -30,10 +30,10 @@ class PortfolioState(TypedDict):
 
 
 def build_graph():
-    BASE_URL = os.getenv("BASE_URL")
-    MODEL = os.getenv("MODEL")
-    NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
-    EMBEDDINGS_MODEL = os.getenv("EMBEDDINGS_MODEL")
+    OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    OPENAI_EMBEDDINGS_MODEL = os.getenv("OPENAI_EMBEDDINGS_MODEL")
     DB_HOST = os.getenv("DB_HOST", "localhost")
     DB_PORT = os.getenv("DB_PORT", "5432")
     DB_NAME = os.getenv("DB_NAME")
@@ -41,9 +41,9 @@ def build_graph():
     DB_PASSWORD = os.getenv("DB_PASSWORD")
 
     embeddings = NVIDIAEmbeddings(
-        model=EMBEDDINGS_MODEL,
-        api_key=NVIDIA_API_KEY,
-        base_url=BASE_URL,
+        model=OPENAI_EMBEDDINGS_MODEL,
+        api_key=OPENAI_API_KEY,
+        base_url=OPENAI_BASE_URL,
     )
 
     connection = f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -55,9 +55,9 @@ def build_graph():
     )
 
     llm = ChatOpenAI(
-        model=MODEL,
-        api_key=NVIDIA_API_KEY,
-        base_url=BASE_URL,
+        model=OPENAI_MODEL,
+        api_key=OPENAI_API_KEY,
+        base_url=OPENAI_BASE_URL,
         temperature=0.5,
     )
 
